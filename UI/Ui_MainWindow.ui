@@ -14,19 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="videoDisplayWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>651</width>
-      <height>511</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="updateButton">
     <property name="geometry">
      <rect>
@@ -111,7 +98,7 @@
      <rect>
       <x>10</x>
       <y>550</y>
-      <width>661</width>
+      <width>671</width>
       <height>22</height>
      </rect>
     </property>
@@ -201,6 +188,17 @@
     <property name="text">
      <string>&gt;&gt;</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>671</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="videoGridLayout"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
