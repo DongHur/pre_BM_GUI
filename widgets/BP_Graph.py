@@ -48,7 +48,7 @@ class BP_Canvas(FigureCanvas):
         # bp_data = bp_h5data[ bp_h5data.keys().levels[0][0] ].values # converts h5 to npy
 
         self.num_frame = bp_data.shape[-1]
-        self.data  = bp_data.reshape(self.num_bp,self.num_dim,self.num_frame) # num_bp x num_coord x t
+        self.data  = bp_data.reshape(self.num_bp, self.num_dim, self.num_frame) # num_bp x num_coord x t
         # udpate video and bodypoint graph
         self.update_canvas(frame=0)
         # cap.release()

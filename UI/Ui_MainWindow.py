@@ -74,6 +74,9 @@ class Ui_MainWindow(object):
         self.percentageLabel = QtWidgets.QLabel(self.centralwidget)
         self.percentageLabel.setGeometry(QtCore.QRect(620, 570, 60, 16))
         self.percentageLabel.setObjectName("percentageLabel")
+        self.FrameZeroButton = QtWidgets.QPushButton(self.centralwidget)
+        self.FrameZeroButton.setGeometry(QtCore.QRect(130, 640, 113, 32))
+        self.FrameZeroButton.setObjectName("FrameZeroButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 689, 22))
@@ -105,6 +108,7 @@ class Ui_MainWindow(object):
         self.frameLabel.setText(_translate("MainWindow", "0/0"))
         self.accuracyLabel.setText(_translate("MainWindow", "Accuracy:"))
         self.percentageLabel.setText(_translate("MainWindow", "0%"))
+        self.FrameZeroButton.setText(_translate("MainWindow", "Frame to Zero"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionOpen.setText(_translate("MainWindow", "Open ..."))
 

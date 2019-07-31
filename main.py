@@ -34,12 +34,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.singleRightButton.clicked.connect(self.right_clicked)
         self.doubleRightButton.clicked.connect(self.right_right_clicked)
         self.updateButton.clicked.connect(self.BPCanvas.reformat_data)
+        self.FrameZeroButton.clicked.connect(self.frame_zero_clicked)
         # self.MeanFilterButton.clicked.connect(self.mean_filter_clicked)
         
         
         # connect keys
         self.shortcut_j = QShortcut(QKeySequence("Alt+J"), self.centralwidget, self.left_clicked)
         self.shortcut_k = QShortcut(QKeySequence("Alt+K"), self.centralwidget, self.right_clicked)
+        self.shortcut_z = QShortcut(QKeySequence("Alt+Z"), self.centralwidget, self.frame_zero_clicked)
         self.shortcut_space = QShortcut(QKeySequence("Alt+Space"), self.centralwidget, self.right_clicked)
         pass
     def open_clicked(self):
@@ -139,6 +141,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.VideoSlider.repaint()
         else:
             print(":: reached the beginning")
+        pass
+    def frame_zero_clicked(self):
+        if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
+            frame_data = np.ones((self.BPCanvas.num_bp, self.BPCanvas.num_dim))*200
+            self.BPCanvas.update_frame(frame_data=frame_data, frame=self.BPCanvas.cur_frame)
+            self.repaint()
+        else:
+            print(":: no file loaded to filter")
         pass
     def reset(self):
         self.VideoSlider.setEnabled(False)
