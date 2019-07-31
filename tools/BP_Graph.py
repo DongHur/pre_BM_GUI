@@ -12,11 +12,15 @@ class BP_Canvas(FigureCanvas):
     def __init__(self, *args, **kwargs):
         self.fig = Figure()
         super(BP_Canvas, self).__init__(self.fig)
-        self.filepath = ''
+        self.video_dir = None
+        self.DLC_dir = None
         self.data = None
         self.ax = None
         self.num_frame = 0
         self.num_bp = 30
+        self.cur_frame = 0
+        self.clicked = False
+        self.closest_idx = None
         self.setup_canvas()
     def setup_canvas(self):
         self.ax = self.fig.add_subplot(111)
@@ -26,8 +30,12 @@ class BP_Canvas(FigureCanvas):
         self.draw()
         # connect on click graph
         self.fig.canvas.mpl_connect('button_press_event', self.onClick)
+        self.fig.canvas.mpl_connect('motion_notify_event', self.onMotion)
+        self.fig.canvas.mpl_connect('button_release_event', self.onUnclick)
         pass
     def load_file(self, video_dir, DLC_dir):
+        self.video_dir = video_dir
+        self.DLC_dir = DLC_dir
         # setup ant video
         self.cap = cv2.VideoCapture(video_dir)
         # setup DeepLabCut
@@ -42,6 +50,8 @@ class BP_Canvas(FigureCanvas):
         pass
     def update_canvas(self, frame=0):
         self.ax.clear()
+        self.cur_frame = frame
+        print(":: Current Frame: ", self.cur_frame)
         # update ant video
         self.cap.set(1, frame)
         _, framePic = self.cap.read()
@@ -52,7 +62,6 @@ class BP_Canvas(FigureCanvas):
         pass
     def plot_bpgraph(self, frame=0):
         # self.fig.clear()
-        # ax = self.add_subplot(111)
         marker = 'o'
         s=4
         # plot graph
@@ -67,10 +76,28 @@ class BP_Canvas(FigureCanvas):
         self.ax.plot(self.data[27:30,0,frame], self.data[27:30,1,frame], marker=marker, markersize=s)
         pass
     def onClick(self, event):
-        print("x: ", event.xdata)
-        print("y: ", event.ydata)
+        if self.DLC_dir and self.video_dir:
+            self.clicked = True
+            clicked_point = np.array([event.xdata, event.ydata])
+            self.closest_idx = self.closest_point(clicked_point)  
         pass
-
+    def onUnclick(self, event):
+        self.clicked = False
+        self.closest_idx = None
+        pass
+    def onMotion(self, event):
+        if self.clicked == True and self.closest_idx != None:
+            print(":: x motion: ", event.xdata)
+            print(":: y motion: ", event.ydata)
+            clicked_point = np.array([event.xdata, event.ydata])
+            self.data[self.closest_idx,:,self.cur_frame] = clicked_point
+            self.update_canvas(self.cur_frame)
+        pass
+    def closest_point(self, clicked_point):
+        threshold = 45
+        dist_2 = np.sum((self.data[:,:,self.cur_frame] - clicked_point)**2, axis=1)
+        closest_idx = np.argmin(dist_2)
+        return closest_idx if dist_2[closest_idx] < threshold else None
 
 
 class BP_Graph(Figure):

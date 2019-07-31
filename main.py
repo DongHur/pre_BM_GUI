@@ -4,7 +4,7 @@ import numpy as np
 from glob import glob
 
 # from PyQt5.QtGui import 
-from PyQt5.QtCore import (QDir)
+from PyQt5.QtCore import (QDir, QTimer)
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog)
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
@@ -19,22 +19,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setup_video()
         self.setup_connection()
         self.show()
-    def setup_connection(self):
-        self.actionOpen.triggered.connect(self.open_clicked)
-        self.VideoSlider.sliderMoved.connect(self.slider_moved)
-        # self.updateButton.clicked.connect()
-        # self.filter1Button.clicked.connect()
-        # self.playButton.clicked.connect()
-        # self.singleLeftButton.clicked.connect()
-        # self.doubleLeftButton.clicked.connect()
-        # self.singleRightButton.clicked.connect()
-        # self.doubleRightButton.clicked.connect()
-
-        # self.VideoSlider.setValue(position)
-        pass
+        self.canvas_on = False
     def setup_video(self):
         self.BPCanvas = BP_Canvas()
         self.videoGridLayout.addWidget(self.BPCanvas)
+        pass
+    def setup_connection(self):
+        self.actionOpen.triggered.connect(self.open_clicked)
+        self.VideoSlider.sliderMoved.connect(self.slider_moved)
+        self.singleLeftButton.clicked.connect(self.left_clicked)
+        self.doubleLeftButton.clicked.connect(self.left_left_clicked)
+        self.singleRightButton.clicked.connect(self.right_clicked)
+        self.doubleRightButton.clicked.connect(self.right_right_clicked)
+        self.filter1Button.clicked.connect(self.filter1_clicked)
+        # self.updateButton.clicked.connect()
+        
         pass
     def open_clicked(self):
         video_filename = ''
@@ -60,12 +59,68 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if video_dir!='' and DLC_dir!='':
                 self.BPCanvas.load_file(video_dir, DLC_dir)
                 # update slider
-                self.VideoSlider.setRange(0, self.BPCanvas.num_frame)
+                self.VideoSlider.setRange(0, self.BPCanvas.num_frame-1)
+                self.frameLabel.setText("0/"+str(self.BPCanvas.num_frame-1))
             else:
                 print("::FAILED TO LOAD DATA")
         pass
     def slider_moved(self, frame):
-        self.BPCanvas.update_canvas(frame)
+        if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
+            self.frameLabel.setText(str(frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.BPCanvas.update_canvas(frame)
+        pass
+    def right_clicked(self):
+        new_frame = self.BPCanvas.cur_frame+1
+        if new_frame < self.BPCanvas.num_frame:
+            self.BPCanvas.update_canvas(new_frame)
+            self.VideoSlider.setValue(new_frame)
+            self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.VideoSlider.repaint()
+        else:
+            print(":: reached the end")
+        pass
+    def right_right_clicked(self):
+        new_frame = self.BPCanvas.cur_frame+2
+        if new_frame < self.BPCanvas.num_frame:
+            self.BPCanvas.update_canvas(self.BPCanvas.cur_frame+2)
+            self.VideoSlider.setValue(new_frame)
+            self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.VideoSlider.repaint()
+        elif new_frame-1 <= self.BPCanvas.num_frame:
+            self.BPCanvas.update_canvas(new_frame-1)
+            self.VideoSlider.setValue(new_frame-1)
+            self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.VideoSlider.repaint()
+        else:
+            print(":: reached the end")
+        pass
+    def left_clicked(self):
+        new_frame = self.BPCanvas.cur_frame-1
+        if new_frame >= 0:
+            self.BPCanvas.update_canvas(new_frame)
+            self.VideoSlider.setValue(new_frame)
+            self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.VideoSlider.repaint()
+        else:
+            print(":: reached the beginning")
+        pass
+    def left_left_clicked(self):
+        new_frame = self.BPCanvas.cur_frame-2
+        if new_frame >= 0:
+            self.BPCanvas.update_canvas(new_frame)
+            self.VideoSlider.setValue(new_frame)
+            self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.VideoSlider.repaint()
+        elif new_frame+1 >= 0:
+            self.BPCanvas.update_canvas(new_frame+1)
+            self.VideoSlider.setValue(new_frame+1)
+            self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
+            self.VideoSlider.repaint()
+        else:
+            print(":: reached the beginning")
+        pass
+    def filter1_clicked(self):
+        
         pass
 
 
