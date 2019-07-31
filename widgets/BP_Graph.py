@@ -57,7 +57,7 @@ class BP_Canvas(FigureCanvas):
         self.ax.clear()
         self.cur_frame = frame
         self.perc = round(np.mean(self.data[:,2,frame])*100, 2)
-        print(":: Current Frame: ", self.cur_frame)
+        # print(":: Current Frame: ", self.cur_frame)
         # update ant video
         self.cap.set(1, frame)
         _, framePic = self.cap.read()
@@ -93,8 +93,8 @@ class BP_Canvas(FigureCanvas):
         pass
     def onMotion(self, event):
         if self.clicked == True and self.closest_idx != None:
-            print(":: x motion: ", event.xdata)
-            print(":: y motion: ", event.ydata)
+            # print(":: x motion: ", event.xdata)
+            # print(":: y motion: ", event.ydata)
             clicked_point = np.array([event.xdata, event.ydata])
             self.data[self.closest_idx,0:2,self.cur_frame] = clicked_point
             self.update_canvas(self.cur_frame)
