@@ -3,9 +3,9 @@ import os
 import numpy as np
 from glob import glob
 
-# from PyQt5.QtGui import 
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import (QDir, QTimer)
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog)
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog, QShortcut)
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 
@@ -36,6 +36,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.MeanFilterButton.clicked.connect(self.mean_filter_clicked)
         # self.updateButton.clicked.connect()
         
+        # connect keys
+        self.shortcut_j = QShortcut(QKeySequence("Alt+J"), self.centralwidget, self.left_clicked)
+        self.shortcut_k = QShortcut(QKeySequence("Alt+K"), self.centralwidget, self.right_clicked)
+        self.shortcut_space = QShortcut(QKeySequence("Alt+Space"), self.centralwidget, self.right_clicked)
         pass
     def open_clicked(self):
         video_filename = ''
