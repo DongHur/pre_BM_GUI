@@ -33,8 +33,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.doubleLeftButton.clicked.connect(self.left_left_clicked)
         self.singleRightButton.clicked.connect(self.right_clicked)
         self.doubleRightButton.clicked.connect(self.right_right_clicked)
+        self.updateButton.clicked.connect(self.BPCanvas.reformat_data)
         # self.MeanFilterButton.clicked.connect(self.mean_filter_clicked)
-        # self.updateButton.clicked.connect()
+        
         
         # connect keys
         self.shortcut_j = QShortcut(QKeySequence("Alt+J"), self.centralwidget, self.left_clicked)
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         video_filename = ''
         DLC_filename = ''
         directory = QFileDialog.getExistingDirectory(None, "Select Directory", QDir.homePath())
-        if directory != '' or directory != None:
+        if directory != '' and directory != None:
             filename_key = directory.split('/')[-1]
 
             # find video filename
@@ -66,10 +67,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.BPCanvas.load_file(video_dir, DLC_dir)
                 # update slider
                 self.VideoSlider.setRange(0, self.BPCanvas.num_frame-1)
+                self.VideoSlider.setValue(0)
+                self.VideoSlider.setEnabled(True)
                 self.frameLabel.setText("0/"+str(self.BPCanvas.num_frame-1))
                 self.filenameLabel.setText(filename_key)
             else:
                 print("::FAILED TO LOAD DATA")
+                self.reset()
+        else:
+            self.reset()
         pass
     def slider_moved(self, frame):
         if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
@@ -125,6 +131,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.VideoSlider.repaint()
         else:
             print(":: reached the beginning")
+        pass
+    def reset(self):
+        self.VideoSlider.setEnabled(False)
+        self.frameLabel.setText("0/0")
+        self.filenameLabel.setText("filename")
+        self.BPCanvas.reset()
+        self.repaint()
         pass
     # def mean_filter_clicked(self):
     #     if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:

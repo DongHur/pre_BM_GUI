@@ -38,6 +38,7 @@ class Ui_MainWindow(object):
         self.filenameLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.filenameLabel.setObjectName("filenameLabel")
         self.VideoSlider = QtWidgets.QSlider(self.centralwidget)
+        self.VideoSlider.setEnabled(False)
         self.VideoSlider.setGeometry(QtCore.QRect(10, 550, 561, 22))
         self.VideoSlider.setOrientation(QtCore.Qt.Horizontal)
         self.VideoSlider.setObjectName("VideoSlider")
