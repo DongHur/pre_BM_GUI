@@ -72,6 +72,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.frameLabel.setText("0/"+str(self.BPCanvas.num_frame-1))
                 self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
                 self.filenameLabel.setText(filename_key)
+                self.repaint()
             else:
                 print("::FAILED TO LOAD DATA")
                 self.reset()
