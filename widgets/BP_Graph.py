@@ -98,6 +98,10 @@ class BP_Canvas(FigureCanvas):
         dist_2 = np.sum((self.data[:,:,self.cur_frame] - clicked_point)**2, axis=1)
         closest_idx = np.argmin(dist_2)
         return closest_idx if dist_2[closest_idx] < threshold else None
+    def update_frame(self, frame_data, frame):
+        self.data[:,:,frame] = frame_data
+        self.update_canvas(frame)
+        pass
 
 
 class BP_Graph(Figure):

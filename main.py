@@ -10,7 +10,9 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 
 from UI.Ui_MainWindow import Ui_MainWindow
-from tools.BP_Graph import BP_Canvas
+from widgets.BP_Graph import BP_Canvas
+
+from tools.filter import mean_filter
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -31,7 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.doubleLeftButton.clicked.connect(self.left_left_clicked)
         self.singleRightButton.clicked.connect(self.right_clicked)
         self.doubleRightButton.clicked.connect(self.right_right_clicked)
-        self.filter1Button.clicked.connect(self.filter1_clicked)
+        # self.MeanFilterButton.clicked.connect(self.mean_filter_clicked)
         # self.updateButton.clicked.connect()
         
         pass
@@ -61,6 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # update slider
                 self.VideoSlider.setRange(0, self.BPCanvas.num_frame-1)
                 self.frameLabel.setText("0/"+str(self.BPCanvas.num_frame-1))
+                self.filenameLabel.setText(filename_key)
             else:
                 print("::FAILED TO LOAD DATA")
         pass
@@ -119,12 +122,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             print(":: reached the beginning")
         pass
-    def filter1_clicked(self):
-        
-        pass
-
-
-
+    # def mean_filter_clicked(self):
+    #     if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
+    #         frame_data = mean_filter(data=self.BPCanvas.data, frame=self.BPCanvas.cur_frame, k=1)
+    #         self.BPCanvas.update_frame(frame_data=frame_data, frame=self.BPCanvas.cur_frame)
+    #         self.repaint()
+    #         print(":: finished filtering")
+    #     else:
+    #         print(":: no file loaded to filter")
+    #     pass
 
 
 if __name__ == '__main__':
