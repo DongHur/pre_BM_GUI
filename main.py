@@ -70,6 +70,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.VideoSlider.setValue(0)
                 self.VideoSlider.setEnabled(True)
                 self.frameLabel.setText("0/"+str(self.BPCanvas.num_frame-1))
+                self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
                 self.filenameLabel.setText(filename_key)
             else:
                 print("::FAILED TO LOAD DATA")
@@ -87,6 +88,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_frame < self.BPCanvas.num_frame:
             self.BPCanvas.update_canvas(new_frame)
             self.VideoSlider.setValue(new_frame)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
             self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.VideoSlider.repaint()
         else:
@@ -97,11 +99,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_frame < self.BPCanvas.num_frame:
             self.BPCanvas.update_canvas(self.BPCanvas.cur_frame+2)
             self.VideoSlider.setValue(new_frame)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
             self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.VideoSlider.repaint()
         elif new_frame-1 <= self.BPCanvas.num_frame:
             self.BPCanvas.update_canvas(new_frame-1)
             self.VideoSlider.setValue(new_frame-1)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
             self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.VideoSlider.repaint()
         else:
@@ -112,6 +116,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_frame >= 0:
             self.BPCanvas.update_canvas(new_frame)
             self.VideoSlider.setValue(new_frame)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
             self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.VideoSlider.repaint()
         else:
@@ -122,11 +127,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_frame >= 0:
             self.BPCanvas.update_canvas(new_frame)
             self.VideoSlider.setValue(new_frame)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
             self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.VideoSlider.repaint()
         elif new_frame+1 >= 0:
             self.BPCanvas.update_canvas(new_frame+1)
             self.VideoSlider.setValue(new_frame+1)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
             self.frameLabel.setText(str(new_frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.VideoSlider.repaint()
         else:
@@ -134,6 +141,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
     def reset(self):
         self.VideoSlider.setEnabled(False)
+        self.percentageLabel.setText("0%")
         self.frameLabel.setText("0/0")
         self.filenameLabel.setText("filename")
         self.BPCanvas.reset()

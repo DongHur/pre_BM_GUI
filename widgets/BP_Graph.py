@@ -19,6 +19,7 @@ class BP_Canvas(FigureCanvas):
         self.num_frame = 0
         self.num_bp = 30
         self.num_dim = 3
+        self.perc = 0
         self.cur_frame = 0
         self.clicked = False
         self.closest_idx = None
@@ -55,6 +56,7 @@ class BP_Canvas(FigureCanvas):
     def update_canvas(self, frame=0):
         self.ax.clear()
         self.cur_frame = frame
+        self.perc = round(np.mean(self.data[:,2,frame])*100, 2)
         print(":: Current Frame: ", self.cur_frame)
         # update ant video
         self.cap.set(1, frame)
@@ -123,6 +125,7 @@ class BP_Canvas(FigureCanvas):
         self.data = None
         self.num_frame = 0
         self.cur_frame = 0
+        self.perc = 0
         self.clicked = False
         self.closest_idx = None
         self.ax.clear()
