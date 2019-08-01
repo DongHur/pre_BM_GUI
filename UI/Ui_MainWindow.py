@@ -14,6 +14,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(689, 797)
+        MainWindow.setFocusPolicy(QtCore.Qt.ClickFocus)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.updateButton = QtWidgets.QPushButton(self.centralwidget)
