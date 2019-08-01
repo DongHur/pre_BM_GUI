@@ -143,7 +143,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print(":: reached the beginning")
         pass
     def frame_zero_clicked(self):
-        if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
+        if (self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None and 
+            self.startLineEdit.text().isdigit()  and self.startLineEdit.text().isdigit()):
             startFr = int(self.startLineEdit.text())
             stopFr = int(self.stopLineEdit.text())+1
             self.startLineEdit.setText("")
@@ -152,7 +153,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.BPCanvas.update_frame(frame_data=frame_data, frame=np.arange(startFr,stopFr))
             self.repaint()
         else:
-            print(":: no file loaded to filter")
+            print(":: no file loaded to filter OR frame not integers")
         pass
     def reset(self):
         self.VideoSlider.setEnabled(False)
