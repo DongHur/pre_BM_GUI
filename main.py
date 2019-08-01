@@ -144,8 +144,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
     def frame_zero_clicked(self):
         if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
-            frame_data = np.ones((self.BPCanvas.num_bp, self.BPCanvas.num_dim))*200
-            self.BPCanvas.update_frame(frame_data=frame_data, frame=self.BPCanvas.cur_frame)
+            startFr = int(self.startLineEdit.text())
+            stopFr = int(self.stopLineEdit.text())+1
+            self.startLineEdit.setText("")
+            self.stopLineEdit.setText("")
+            frame_data = np.ones((self.BPCanvas.num_bp, self.BPCanvas.num_dim, stopFr-startFr))*200
+            self.BPCanvas.update_frame(frame_data=frame_data, frame=np.arange(startFr,stopFr))
             self.repaint()
         else:
             print(":: no file loaded to filter")

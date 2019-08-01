@@ -106,7 +106,7 @@ class BP_Canvas(FigureCanvas):
         return closest_idx if dist_2[closest_idx] < threshold else None
     def update_frame(self, frame_data, frame):
         self.data[:,:,frame] = frame_data
-        self.update_canvas(frame)
+        self.update_canvas(self.cur_frame)
         pass
     def reformat_data(self):
         if self.DLC_dir:
