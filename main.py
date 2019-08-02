@@ -35,24 +35,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.doubleRightButton.clicked.connect(self.right_right_clicked)
         self.updateButton.clicked.connect(self.BPCanvas.reformat_data)
         self.FrameZeroButton.clicked.connect(self.frame_zero_clicked)
+        self.undoButton.clicked.connect(self.undo)
         # self.MeanFilterButton.clicked.connect(self.mean_filter_clicked)
-        
-        
+
         # connect keys
         self.shortcut_j = QShortcut(QKeySequence("Alt+J"), self.centralwidget, self.left_clicked)
         self.shortcut_k = QShortcut(QKeySequence("Alt+K"), self.centralwidget, self.right_clicked)
-        self.shortcut_z = QShortcut(QKeySequence("Alt+Z"), self.centralwidget, self.frame_zero_clicked)
         self.shortcut_space = QShortcut(QKeySequence("Alt+Space"), self.centralwidget, self.right_clicked)
         pass
     def open_clicked(self):
-        video_filename = ''
-        DLC_filename = ''
+        video_dir = ''
+        DLC_dir = ''
         directory = QFileDialog.getExistingDirectory(None, "Select Directory", QDir.homePath())
         if directory != '' and directory != None:
             filename_key = directory.split('/')[-1]
 
             # find video filename
-            vid_file = glob(directory+"/"+filename_key+'.avi')
+            vid_file = glob(directory+"/"+filename_key+'*.avi')
             if len(vid_file) != 0:
                 video_dir = vid_file[0]
             else:
@@ -85,6 +84,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
             self.frameLabel.setText(str(frame)+"/"+str(self.BPCanvas.num_frame-1))
             self.BPCanvas.update_canvas(frame)
+            self.percentageLabel.setText(str(self.BPCanvas.perc)+"%")
         pass
     def right_clicked(self):
         new_frame = self.BPCanvas.cur_frame+1
@@ -149,7 +149,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             stopFr = int(self.stopLineEdit.text())+1
             self.startLineEdit.setText("")
             self.stopLineEdit.setText("")
-            frame_data = np.ones((self.BPCanvas.num_bp, self.BPCanvas.num_dim, stopFr-startFr))*200
+            frame_data = np.ones((self.BPCanvas.num_bp, self.BPCanvas.num_dim-1, stopFr-startFr))*200
             self.BPCanvas.update_frame(frame_data=frame_data, frame=np.arange(startFr,stopFr))
             self.repaint()
         else:
@@ -161,6 +161,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.frameLabel.setText("0/0")
         self.filenameLabel.setText("filename")
         self.BPCanvas.reset()
+        self.repaint()
+        pass
+    def undo(self):
+        self.BPCanvas.undo()
         self.repaint()
         pass
     # def mean_filter_clicked(self):
