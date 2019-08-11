@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import cv2
+import os
 
 from PyQt5.QtWidgets import (QWidget)
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -24,11 +25,13 @@ class BP_Canvas(FigureCanvas):
         self.cur_frame = 0
         self.clicked = False
         self.closest_idx = None
+        self.video_size = (0,0)
         self.setup_canvas()
     def setup_canvas(self):
         self.ax = self.fig.add_subplot(111)
         self.ax.plot([], 'o-')
         # self.ax.tick_params(axis='both', labelsize=6)
+
         self.draw()
         # connect on click graph
         self.fig.canvas.mpl_connect('button_press_event', self.onClick)
@@ -40,13 +43,16 @@ class BP_Canvas(FigureCanvas):
         self.DLC_dir = DLC_dir
         # setup ant video
         self.cap = cv2.VideoCapture(video_dir)
+        self.cap.set(1, 0)
+        _, framePic = self.cap.read()
+        self.video_size = (framePic.shape[0], framePic.shape[1])
         # setup DeepLabCut
         store = pd.HDFStore(DLC_dir, mode='r')
         bp_data = store.select('df_with_missing').T.to_numpy()
         store.close()
 
         self.num_frame = bp_data.shape[-1]
-        self.data  = bp_data.reshape(self.num_bp, self.num_dim, self.num_frame) # num_bp x num_coord x t
+        self.data  = bp_data.reshape(self.num_bp, self.num_dim, self.num_frame) # num_bp x num_coord x frame
         # udpate video and bodypoint graph
         self.update_canvas(frame=0)
         # cap.release()
@@ -54,8 +60,6 @@ class BP_Canvas(FigureCanvas):
     def update_canvas(self, frame=0):
         self.ax.clear()
         self.cur_frame = frame
-        print("values: ", np.mean(self.data[:,2,frame]))
-        print(self.data[:,2,frame])
         self.perc = round(np.mean(self.data[:,2,frame])*100, 2)
         # print(":: Current Frame: ", self.cur_frame)
         # update ant video
@@ -139,6 +143,38 @@ class BP_Canvas(FigureCanvas):
             self.update_canvas(self.cur_frame)
             print(":: undo")
         pass
+    def delete_frames(self, ranges):
+        self.data = np.delete(self.data, ranges, axis=2)
+
+        # create new videos with delete frames
+        basename = os.path.basename(self.video_dir).split(".")
+        dir_path = os.path.dirname(self.video_dir)
+        filename = basename[0]
+        extension = "."+basename[1]
+
+        name = dir_path+"/"+filename+"_new"+extension
+        # fourcc = cv2.cv.CV_FOURCC('m', 'p', '4', 'v') # note the lower case
+        fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+        frameRate = 50.0
+        vid = cv2.VideoWriter(name, fourcc, frameRate, self.video_size, True)
+
+        indices = np.arange(self.num_frame)
+        indices = np.delete(indices, ranges)
+        for i in indices:
+            self.cap.set(1, i)
+            _, frame = self.cap.read()
+            vid.write(frame)
+        vid.release()
+        vid = None
+        pass
+
+
+
+
+
+
+
+
 
 
 

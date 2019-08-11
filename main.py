@@ -36,6 +36,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.updateButton.clicked.connect(self.BPCanvas.reformat_data)
         self.FrameZeroButton.clicked.connect(self.frame_zero_clicked)
         self.undoButton.clicked.connect(self.undo)
+        self.deleteFrameButton.clicked.connect(self.delete_frames_clicked)
         # self.MeanFilterButton.clicked.connect(self.mean_filter_clicked)
 
         # connect keys
@@ -167,6 +168,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.BPCanvas.undo()
         self.repaint()
         pass
+    def delete_frames_clicked(self):
+        if (self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None):
+            ranges=np.array([])
+            fr_ranges = self.DeleteLineEdit.text().split(',')
+            for interval in fr_ranges:
+                frames = interval.split("-")
+                if int(frames[0]) <= int(frames[1]):
+                    ranges = np.append( ranges, np.arange(int(frames[0]), int(frames[1])+1) )
+                else:
+                    print(":: incorrect ranges")
+            self.BPCanvas.delete_frames(ranges)
+        pass
+    
     # def mean_filter_clicked(self):
     #     if self.BPCanvas.video_dir != None and self.BPCanvas.DLC_dir != None:
     #         frame_data = mean_filter(data=self.BPCanvas.data, frame=self.BPCanvas.cur_frame, k=1)
